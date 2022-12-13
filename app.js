@@ -3,7 +3,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
-const session = require("exprsss-session");
+const session = require("express-session");
 const passport  = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
 const { Passport } = require("passport");
@@ -53,9 +53,19 @@ app.get("/login",function(req,res){
 
 
 app.post("/login",function(req,res){
-    const username = req.body.username ;
-    const password = req.body.password ;
-
+    const user = new User({
+        username: req.body.username,
+        password: req.body.password
+    });
+    req.login(user,function(err){
+        if(err){
+            console.log(er);
+        }else{
+            passport.authenticate("local")(req,res,function(){
+            res.redirect("/secrets");
+            });
+        }
+    })
 });
 
 
@@ -65,13 +75,13 @@ app.get("/register",function(req,res){
 });
 
 
-app.get("/secret",function(req,res){
+app.get("/secrets",function(req,res){
     if(req.isAuthenticated()){
         res.render("secrets")
     }else{
-        res.redirect
+        res.redirect("login");
     }
-})
+});
 
 app.post("/register",function(req,res){
     
@@ -85,6 +95,13 @@ app.post("/register",function(req,res){
       }
    }); 
 });
+
+
+app.get('/logout', function(req, res){
+    req.logout(function(err) {
+      res.redirect('/');
+    });
+  });
 
 
 app.listen(3000,function(){
