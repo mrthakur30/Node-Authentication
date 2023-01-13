@@ -1,6 +1,8 @@
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
+const uri = "mongodb+srv://mrthakur30:mukul@cluster0.erkaujm.mongodb.net/myDB";
+mongoose.set('strictQuery', false);
 const findOrCreate = require("mongoose-findorcreate");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
@@ -25,7 +27,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 //mongoose
 
-mongoose.connect("mongodb+srv://mrthakur30:mukul@cluster0.erkaujm.mongodb.net/userDB",{useNewUrlParser: true});
+mongoose.connect(uri,{useNewUrlParser: true});
 const userSchema = new mongoose.Schema({
     email : String,
     password : String,
@@ -163,6 +165,6 @@ app.get('/logout', function(req, res){
   });
 
 
-app.listen(3000,function(){
-    console.log("App running on localhost 3000");
+app.listen(8080,function(){
+    console.log("App running on localhost 3003");
 });
